@@ -2,6 +2,8 @@
 
 本Dockerfile通过编译时和运行时传递变量实现frp自动更新,一个文件即可,无需分别编写frps和frpc的Dockerfile.
 
+<https://hub.docker.com/r/fonny/frps>
+
 <https://hub.docker.com/r/fonny/frpc>
 
 <https://github.com/fjxhkj/frp_docker>
@@ -13,11 +15,9 @@
 如果新版本号为 `0.34.3` 则直接使用以下命令即可编译最新镜像,通过参数选择 frps/frpc
 
 ```bash
-# frps
-docker build --build-arg FRPE=frps --build-arg FRPV=0.34.3 -t fonny/frp .
-
-# frpc
-docker build --build-arg FRPE=frpc --build-arg FRPV=0.34.3 -t fonny/frp .
+# 要编译frpc只需修改变量FRPE
+FRPE=frps && \
+docker build --build-arg FRPE=${FRPE} --build-arg FRPV=0.34.3 -t fonny/${FRPE} .
 ```
 
 #### 运行时
@@ -25,46 +25,32 @@ docker build --build-arg FRPE=frpc --build-arg FRPV=0.34.3 -t fonny/frp .
 frp的ini文件放到主机的`/frp/config`目录中,运行容器:
 
 ```bash
-# frps
-docker run -e "FRPE=frps" -v="/frp/config:/config" -p="7000:7000" -p="80:80" fonny/frp
-
-# frpc
-docker run -e "FRPE=frpc" -v="/frp/config:/config" -p="7000:7000" -p="80:80" fonny/frp
+# 要运行frpc只需修改变量FRPE
+FRPE=frps && \
+docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny/${FRPE}
 ```
 
 ### 使用dockerHub时
 
 ```bash
-# frps
-
-docker pull fonny/frps
-
-# 注意镜像名称为 fonny/frps
-docker run -e "FRPE=frps" -v="/frp/config:/config" -p="7000:7000" -p="80:80" fonny/frps
-
-###########################
-# frpc
-
-docker pull fonny/frpc
-
-# 注意镜像名称为 fonny/frpc
-docker run -e "FRPE=frps" -v="/frp/config:/config" -p="7000:7000" -p="80:80" fonny/frpc
+# 要运行frpc只需修改变量FRPE
+FRPE=frps && \
+docker pull fonny/${FRPE} && \
+docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny/${FRPE}
 ```
 
-#### 推荐用 docker-compose
+### docker-compose
 
-获取 `docker-compose.yml`
-
-##### 通过 github
+#### 通过 github获取 `docker-compose.yml`
 
 ```dockerfile
 mkdir /frp && \
 cd /frp && \
-git pull https://github.com/fjxhkj/frp_docker.git && \
+git clone https://github.com/fjxhkj/frp_docker.git && \
 cd /frp/frp_docker\docker-compose
 ```
 
-##### 或直接复制以下内容
+#### 或直接复制以下内容
 
 如果是frpc就替换一下frps即可.
 
@@ -72,7 +58,7 @@ cd /frp/frp_docker\docker-compose
 
 本机编译可能会占用更多磁盘空间.
 
-###### 用dockerhub镜像
+#### 用dockerhub镜像
 
 ```dockerfile
 version: "3.8"
@@ -92,7 +78,7 @@ services:
     restart: always
 ```
 
-###### 或本机编译
+#### 或本机编译
 
 ```
 version: "3.8"
@@ -127,7 +113,7 @@ docker-compose up -d --force-recreate
 
 手头只有威联通,就以它的 `Container Station` 为例.
 
-### 创建
+**注意,nas一般都是用frpc.**
 
 搜索镜像文件,填入: `fonny`;
 
@@ -166,17 +152,4 @@ docker-compose up -d --force-recreate
 - 点击ContainerStation左侧的`Containers`,找到刚刚创建的容器,点击运行.
 
 - 完成.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
