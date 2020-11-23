@@ -14,5 +14,4 @@ RUN set -ex \
 	&& mv frp_${FRPV}_linux_amd64/${FRPE}.ini /config/ \
 	&& rm -rf *.tar.gz frp_${FRPV}_linux_amd64
 
-VOLUME /config
 ENTRYPOINT /frp/${FRPE} -c /config/${FRPE}.ini
