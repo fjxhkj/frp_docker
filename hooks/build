@@ -1,2 +1,0 @@
-#!/bin/sh
-docker build --build-arg FRPE=$FRPE --build-arg FRPV=$FRPV -t fonny$FRPE .
