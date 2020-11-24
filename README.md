@@ -17,7 +17,8 @@
 ```bash
 # 要编译frpc只需修改变量FRPE
 FRPE=frps && \
-docker build --build-arg FRPE=${FRPE} --build-arg FRPV=0.34.3 -t fonny/${FRPE} .
+FRPV=0.34.3 && \
+docker build --build-arg FRPE=${FRPE} --build-arg FRPV=${FRPV} -t fonny${FRPE} .
 ```
 
 #### 运行时
@@ -27,7 +28,7 @@ frp的ini文件放到主机的`/frp/config`目录中,运行容器:
 ```bash
 # 要运行frpc只需修改变量FRPE
 FRPE=frps && \
-docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny/${FRPE}
+docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny${FRPE}
 ```
 
 ### 使用dockerHub时
@@ -35,8 +36,8 @@ docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" 
 ```bash
 # 要运行frpc只需修改变量FRPE
 FRPE=frps && \
-docker pull fonny/${FRPE} && \
-docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny/${FRPE}
+docker pull fonny${FRPE} && \
+docker run -e "FRPE=${FRPE}" -v="/frp/config:/config" -p="7000:7000" -p="80:80" -p="443:443" fonny${FRPE}
 ```
 
 ### docker-compose
@@ -71,6 +72,7 @@ services:
       FRPE: frps
     volumes:
       - /frp/config:/config:ro
+    network_mode: "host"
     ports:
       - "7000:7000"
       - "80:80"
@@ -96,6 +98,7 @@ services:
       FRPE: frps
     volumes:
       - /frp/config:/config:ro
+    network_mode: "host"
     ports:
       - "7000:7000"
       - "80:80"
@@ -129,7 +132,7 @@ docker-compose up -d --force-recreate
 
  - 命令留空
 
- - 进入点改为: 
+ - 进入点改为(不修改也行,但是要观察`Container Station`是不是自动添加了`/bin/sh -c`): 
 
    ```
    /frp/frpc -c /config/frpc.ini
