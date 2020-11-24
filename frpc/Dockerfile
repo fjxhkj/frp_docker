@@ -2,16 +2,12 @@ FROM alpine:latest
 RUN apk update && apk add --no-cache ca-certificates tzdata
 ENV TZ=Asia/Shanghai
 WORKDIR /
-ARG FRPV
-ARG FRPE
-ENV FRPV=${FRPV:-0.34.3}
-ENV FRPE=${FRPE:-frpc}
 RUN set -ex \
 	&& mkdir /frp /config \
-	&& wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v${FRPV}/frp_${FRPV}_linux_amd64.tar.gz \
-	&& tar xzf frp_${FRPV}_linux_amd64.tar.gz \
-	&& mv frp_${FRPV}_linux_amd64/${FRPE} /frp/ \
-	&& mv frp_${FRPV}_linux_amd64/${FRPE}.ini /config/ \
-	&& rm -rf *.tar.gz frp_${FRPV}_linux_amd64
+	&& wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v0.34.3/frp_0.34.3_linux_amd64.tar.gz \
+	&& tar xzf frp_0.34.3_linux_amd64.tar.gz \
+	&& mv frp_0.34.3_linux_amd64/frpc /frp/ \
+	&& mv frp_0.34.3_linux_amd64/frpc.ini /config/ \
+	&& rm -rf *.tar.gz frp_0.34.3_linux_amd64
 
-ENTRYPOINT /frp/${FRPE} -c /config/${FRPE}.ini
+ENTRYPOINT /frp/frpc -c /config/frpc.ini

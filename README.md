@@ -16,6 +16,8 @@
 
 ```bash
 # 要编译frpc只需修改变量FRPE
+# 要升级frp只需要修改FRPV
+
 FRPE=frps && \
 FRPV=0.34.3 && \
 docker build --build-arg FRPE=${FRPE} --build-arg FRPV=${FRPV} -t fonny${FRPE} .
